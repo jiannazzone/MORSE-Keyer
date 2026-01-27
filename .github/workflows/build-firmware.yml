@@ -8,6 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      QMK_HOME: ~/qmk_firmware
 
     steps:
       - name: Checkout repository
@@ -26,7 +28,8 @@ jobs:
 
       - name: Setup QMK
         run: |
-          qmk setup -y -H ~
+          qmk setup -y -H ~/qmk_firmware
+          qmk config user.qmk_home=~/qmk_firmware
 
       - name: Copy firmware to QMK keyboards directory
         run: |
@@ -34,11 +37,11 @@ jobs:
 
       - name: Compile firmware
         run: |
-          cd ~/qmk_firmware
           qmk compile -kb morse_keyer -km default
 
-      - name: Rename firmware file
+      - name: Move firmware file
         run: |
+          find ~/qmk_firmware -name "*.hex" -type f
           mv ~/qmk_firmware/morse_keyer_default.hex ./morse_keyer_default.hex
 
       - name: Upload firmware artifact
