@@ -14,6 +14,7 @@
         "mousekey": false,
         "nkro": false
     },
+    "debounce": 5,
     "matrix_pins": {
         "direct": [["D4", "C6", "D7"]]
     },
