@@ -13,6 +13,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential gcc-avr avr-libc binutils-avr
+          avr-gcc --version
+
       - name: Install QMK CLI
         run: |
           python3 -m pip install --upgrade pip
@@ -20,7 +26,7 @@ jobs:
 
       - name: Setup QMK
         run: |
-          qmk setup -y
+          qmk setup -y -H ~
 
       - name: Copy firmware to QMK keyboards directory
         run: |
