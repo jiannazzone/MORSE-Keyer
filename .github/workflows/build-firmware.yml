@@ -1,0 +1,44 @@
+name: Build Firmware
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup QMK
+        uses: qmk/setup-qmk@v2
+        with:
+          qmk_version: latest
+
+      - name: Copy firmware to QMK keyboards directory
+        run: |
+          cp -r firmware ~/qmk_firmware/keyboards/morse_keyer
+
+      - name: Compile firmware
+        run: |
+          cd ~/qmk_firmware
+          qmk compile -kb morse_keyer -km default
+
+      - name: Rename firmware file
+        run: |
+          mv ~/qmk_firmware/morse_keyer_default.hex ./morse_keyer_default.hex
+
+      - name: Upload firmware artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: morse_keyer_firmware
+          path: morse_keyer_default.hex
+
+      - name: Upload firmware to release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: morse_keyer_default.hex
