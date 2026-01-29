@@ -2,9 +2,11 @@
 
 A DIY iambic paddle keyer for the [MORSE game](https://morse.withgoogle.com/learn/), built with a Pro Micro and QMK firmware.
 
+![A fully assembled MORSE Keyer. It has two paddles and button on top that reads "FIRE."](assets/complete.jpeg)
+
 ## Features
 
-- Iambic paddle input (dot/dash paddles)
+- Iambic paddle input
 - Fire button for sending characters
 - Plug-and-play USB HID keyboard (no drivers needed)
 - Works on Windows, Mac, and Linux
@@ -28,18 +30,52 @@ A DIY iambic paddle keyer for the [MORSE game](https://morse.withgoogle.com/lear
 
 Each switch connects between the pin and GND.
 
-## 3D Printed Enclosure
+_Note that if you want to key with your left hand, you might want to swap the wiring of the left and right paddles._
 
-<!-- TODO: Add enclosure documentation -->
+## 3D Printed Enclosure and Paddles
 
-*This section is under construction.*
+All files can be found in [cad_files](cad_files). You are welcome to make any modifications that you like to my design (including making it easier to wire).
+
+Print one of each 3MF file:
+
+- Base
+- Case
+- Lid
+- Paddles
+- Fire Button
+
+### Notes on printing
+
+The base and lid both use bridging over the screw holes to avoid needing supports. Just use a screwdriver to poke through.
+
+The paddles print together to avoid any support material. There is a 3rd body within the 3MF that you can mark as a modifier in your slicer. Set it to ironing to prevent the two parts from sticking together. It will probably work without this, but it seemed like a cool idea.
+
+The FIRE letters are separate bodies in the button file. You can mark them as negatives in your slicer for an inset style or you can use them for easy multicolor printing.
 
 
 ## Assembly Guide
 
-<!-- TODO: Add enclosure documentation -->
+The hardest part is soldering wires to the keyswitch pins. Also cut your wires long to start. You can trim them later after routing everything.
 
-*This section is under construction.*
+1. Solder a wire to each pin of the keyswitches. You can color-code them, but since we aren't using diodes, it does not matter which wire goes to GND and which goes to a signal pin on the Pro Micro.
+![Keyswitches have been soldered and have heatshrink tubing](assets/keyswitch_soldered_complete.jpeg)
+*I would highly advise adding some heat shrink for strain relief. The keyboard pins are very fragile.*
+
+2. Prebend the wires as shown above, then snap them into each of the three holes. For the paddle switches, orient the wires on top for extra strain relief. For the FIRE switch, have the pins closest to the back edge of the lid.
+![Keyswitches have been installed in the case. You can also see the paddles.](assets/keyswitches_in_case.jpeg)
+
+3. After inserting all of the switches and routing the cables, you can insert the paddles and affix the lid with four M3 screws.
+
+4. Put some doublesided tape on the underside of the Pro Micro.
+
+5. Trim your wires and solder them to the Pro Micro as laid out above. There are exactly three ground pins, so you don't need to double anything up. **Note that the tape is facing the bottom.**
+![Pro Micro wired up](assets/pro_micro_wired.jpeg)
+
+6. **Before closing everything up, you need to flash the firmware onto your Arduino Pro Micro. See the [Firmware](#firmware) section below.**
+
+7. Now smush it all down, remove film on your tape, and try to stuff it into the base. It won't be particularly pretty, but if you kept your wires short-ish, everything should seal up.
+
+8. Plug it in and start playing!
 
 ## Firmware
 
@@ -61,7 +97,7 @@ Download the latest `morse_keyer_default.hex` from the [Releases](../../releases
 #### Linux
 Let's be honest, you're used to this crap.
 
-Install `avrdude` using your distro package manager and run:
+Install `avrdude` using your distro package manager (you may also need to add your user to the `dialout` group for serial port access) and run:
 
 ```bash
 # Enter bootloader mode first (short RST to GND twice quickly)
